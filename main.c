@@ -105,41 +105,16 @@ int main(int argc, char* argv[])
 	srand(seed1->tv_usec ^ seed2);
 	free(seed1);
 
-	/* Single run*/
-	if(!monitor)
+	do
 	{
-		if(delete)
-			delete_old_songs(handle);
-
-		/* Build a random path */
-		for(i = 0; i < recursion; i++)
+		if(monitor)
 		{
-			count = count_files(handle, path, true);
-			if(count == 0)
-			{
-				fprintf(stderr, "Error: No more directories to continue recursion. "
-									 "Proceeding with path: \"%s\"\n", path);
-				break;
-			}
-			pick_directory(handle, path, rand() % count);
+			/* Wait for state change */
+			idle = mpd_run_idle(handle);
+
+			if(!(idle & MPD_IDLE_PLAYER && last_track(handle)))
+				continue;
 		}
-
-		/* Add the path */
-		if(!quiet)
-			printf("Adding: %s\n", path);
-
-		mpd_run_add(handle, path);
-
-		return EXIT_SUCCESS;
-	}
-
-	/* Monitor mode*/
-	while(1)
-	{
-		idle = mpd_run_idle(handle);
-
-		if(!(idle & MPD_IDLE_PLAYER && last_track(handle)))
-			continue;
 
 		/* Previous albums deletion */
 		if(delete)
@@ -165,7 +140,7 @@ int main(int argc, char* argv[])
 		mpd_run_add(handle, path);
 
 		path[0] = '\0';
-	}
+	} while(monitor);
 
 	mpd_connection_free(handle);
 
