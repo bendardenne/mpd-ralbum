@@ -81,9 +81,10 @@ int main(int argc, char* argv[])
 	if(monitor)
 	{
 		pid_t pid = fork();
-		if(pid > 0)
+		if(pid > 0) {
+            printf("Started daemond with PID %d\n", pid);
 			return EXIT_SUCCESS;
-		else if(pid == -1)
+        } else if(pid == -1)
 			return EXIT_FAILURE;
 	}
 
