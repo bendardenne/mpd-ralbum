@@ -82,7 +82,7 @@ int main(int argc, char* argv[])
 	{
 		pid_t pid = fork();
 		if(pid > 0) {
-            printf("Started daemond with PID %d\n", pid);
+            printf("Started daemon with PID %d\n", pid);
 			return EXIT_SUCCESS;
         } else if(pid == -1)
 			return EXIT_FAILURE;
