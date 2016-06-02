@@ -60,6 +60,9 @@ int main(int argc, char* argv[])
 			case 's' :
 				host = optarg;
 				break;
+			case 'p' :
+				sscanf(optarg, "%d", &port);
+				break;
 			case 'q' :
 				quiet = true;
 				break;
